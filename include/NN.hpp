@@ -3,12 +3,6 @@
 #include <vector>
 #include <functional>
 
-#ifdef NN_EXPORTS
-#define NN_API __declspec(dllexport)
-#else
-#define NN_API __declspec(dllimport)
-#endif
-
 #define NN_FLT_EPSILON 1E-5
 #define CMP(x, y)                         \
 	(fabsf((x) - (y)) <= NN_FLT_EPSILON * \
@@ -17,19 +11,19 @@
 namespace NN
 {
 	typedef std::vector<std::vector<double>> Matrix;
-	 inline NN_API Matrix operator+(const Matrix& l, const Matrix& r);
-	 inline NN_API Matrix operator+(const Matrix& l, const double r);
-	 inline NN_API Matrix operator*(const Matrix& l, const Matrix& r);
-	 inline NN_API Matrix operator*(const Matrix& l, const double r);
-	 inline NN_API Matrix operator-(const Matrix& l, const Matrix& r);
-	 inline NN_API Matrix operator-(const Matrix& l, const double r);
-	 inline NN_API Matrix operator-(const double l, const Matrix& r);
-	 inline NN_API Matrix operator/(const Matrix& l, const Matrix& r);
-	 inline NN_API Matrix operator/(const Matrix& l, const double r);
+	 inline Matrix operator+(const Matrix& l, const Matrix& r);
+	 inline Matrix operator+(const Matrix& l, const double r);
+	 inline Matrix operator*(const Matrix& l, const Matrix& r);
+	 inline Matrix operator*(const Matrix& l, const double r);
+	 inline Matrix operator-(const Matrix& l, const Matrix& r);
+	 inline Matrix operator-(const Matrix& l, const double r);
+	 inline Matrix operator-(const double l, const Matrix& r);
+	 inline Matrix operator/(const Matrix& l, const Matrix& r);
+	 inline Matrix operator/(const Matrix& l, const double r);
 	typedef std::function<Matrix(const Matrix&, const Matrix&)> Loss;
 	typedef std::function<Matrix(const Matrix&, const Matrix&)> LossPrime;
 
-	class NN_API __BaseLayer
+	class __BaseLayer
 	{
 	public:
 		 __BaseLayer() = default;
@@ -40,7 +34,7 @@ namespace NN
 	private:
 	};
 
-	class NN_API Layer : public __BaseLayer
+	class Layer : public __BaseLayer
 	{
 	public:
 		 Layer(std::pair<int, int> topology);
@@ -56,7 +50,7 @@ namespace NN
 		std::pair<int, int> topology;
 	};
 
-	class NN_API ActivationLayer : public __BaseLayer
+	class ActivationLayer : public __BaseLayer
 	{
 	public:
 		 ActivationLayer();
@@ -67,11 +61,11 @@ namespace NN
 		Matrix input;
 	};
 
-	 class NN_API Net
+	 class Net
 	{
 	public:
 		 Net(std::initializer_list<int> topology);
-		// Input must be a Matrix of dimesions (1, n).
+		 // Input must be a Matrix of dimesions (1, n).
 		 Matrix predict(const Matrix& input);
 		 void fit(const Matrix& input, const Matrix& data, const double lr);
 		 static Net load(const char* filename);
@@ -88,8 +82,8 @@ namespace NN
 	};
 
 	// Mean squared error.
-	 Matrix NN_API mse(const Matrix& predicted, const Matrix& actual);
+	 Matrix mse(const Matrix& predicted, const Matrix& actual);
 	// The derivative for the mean squared error.
-	 Matrix NN_API msePrime(const Matrix& predicted, const Matrix& actual);
+	 Matrix msePrime(const Matrix& predicted, const Matrix& actual);
 
 } // namespace NN
